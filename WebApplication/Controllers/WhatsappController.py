@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-from Models.ViewModels.RobotModel import RobotsModel
 from Repositories.SeliniumRepositories.ChromeService import ChromeService
 from Services.WhatsappRobotService import WhatsappRobotService
 
@@ -26,15 +25,6 @@ async def start_robot(robot_id: int):
 @whatsapp_robot.get('/StopRobot')
 async def stop_robot():
     raise NotImplementedError("Under Development")
-
-
-@whatsapp_robot.post('/AddRobot')
-async def add_robot(robot_model: RobotsModel):
-    browser_service: ChromeService = ChromeService()
-    browser_user: str = 'Election'
-    service: WhatsappRobotService = WhatsappRobotService(browser_service, browser_user)
-    service.new_window()
-    return 'Success'
 
 
 @whatsapp_robot.get('/DeleteRobot')

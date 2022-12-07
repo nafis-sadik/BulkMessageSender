@@ -1,6 +1,9 @@
+import os
+
 import sqlalchemy
+from dotenv import load_dotenv, find_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -17,7 +20,8 @@ class Robots(Base):
 
 
 if __name__ == '__main__':
-    DATABASE_URL = "sqlite:///./database.sqlite"
+    load_dotenv(find_dotenv())
+    DATABASE_URL = os.getenv('CONNECTION_STRING_SQLITE')
 
     engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False})
 
