@@ -17,13 +17,14 @@ class Robots(Base):
     browser_selection = Column(String)
     is_incognito = Column(Boolean)
     is_headless = Column(Boolean)
+    is_deleted = Column(Boolean)
 
 
 if __name__ == '__main__':
     load_dotenv(find_dotenv())
-    DATABASE_URL = os.getenv('CONNECTION_STRING_SQLITE')
+    DATABASE_URL = os.getenv('CONNECTION_SQLITE')
 
-    engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False})
+    engine = create_engine(DATABASE_URL, echo=True, connect_args={"check_same_thread": False})
 
     metadata = sqlalchemy.MetaData()
     Base.metadata.create_all(engine, checkfirst=True)

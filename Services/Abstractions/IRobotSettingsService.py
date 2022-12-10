@@ -4,7 +4,7 @@ from Models.ViewModels.RobotModel import RobotsModel
 
 
 class IRobotSettingsService:
-    async def add_async(self, robot_model: RobotsModel) -> Optional[bool]:
+    async def add_async(self, robot_model: RobotsModel) -> Optional[RobotsModel]:
         raise NotImplementedError
 
     async def update_async(self, robot_model: RobotsModel) -> Optional[RobotsModel]:
