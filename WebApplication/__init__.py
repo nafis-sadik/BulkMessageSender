@@ -6,7 +6,7 @@ from starlette.staticfiles import StaticFiles
 from WebApplication.Controllers import router
 
 app = FastAPI(
-    title='Bulk SMS Sender Robot',
+    title='Bulk SMS/MMS Sender Robot',
     version='1.0.0'
 )
 

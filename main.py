@@ -2,9 +2,11 @@ import os
 import uvicorn
 from dotenv import find_dotenv, load_dotenv
 
+from Services.Implementations.RobotControlCenterService import RobotControlCenterService
 from WebApplication import app
 
 if __name__ == '__main__':
     load_dotenv(find_dotenv())
-    port = int(os.environ.get("PORT", 8080))
+    RobotControlCenterService.initialize()
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app=app, host='0.0.0.0', port=port)

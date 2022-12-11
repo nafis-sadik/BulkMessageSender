@@ -1,8 +1,9 @@
-from abc import ABC
-from typing import Optional
-from automapper import mapper
 import logging
 import platform
+from abc import ABC
+from typing import Optional
+
+from automapper import mapper
 
 from Models.Entities.Entity import Robots
 from Models.ViewModels.RobotModel import RobotsModel
@@ -37,11 +38,14 @@ class RobotSettingsService(IRobotSettingsService, ABC):
             if await self.robot_repo.get(Robots.id != robot_model.id, Robots.robot_name == robot_model.robot_name):
                 raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
             entity: Robots = await self.robot_repo.get(Robots.id == robot_model.id)
+            if entity.is_deleted:
+                raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
             entity.robot_name = robot_model.robot_name
             entity.platform_selection = robot_model.platform_selection
             entity.browser_selection = robot_model.browser_selection
             entity.is_incognito = robot_model.is_incognito
             entity.is_headless = robot_model.is_headless
+            entity.is_deleted = False
             await self.robot_repo.commit()
             return mapper.to(RobotsModel).map(entity)
         except Exception as ex:

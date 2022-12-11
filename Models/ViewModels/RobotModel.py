@@ -9,3 +9,4 @@ class RobotsModel(BaseModel):
     browser_selection: str = Field(None, title='Select Browser for Robot', max_length=100)
     is_incognito: bool = Field(None, title='Should the Robot use Incognito Mode')
     is_headless: bool = Field(None, title='Should the Robot use the Browser in Headless Mode?')
+    is_deleted: bool = Field(None, title='Indicates if the robot has been deleted or not')
