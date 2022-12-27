@@ -2,7 +2,7 @@ import os
 import uvicorn
 from dotenv import find_dotenv, load_dotenv
 
-from Services.Implementations.RobotControlCenterService import RobotControlCenterService
+from JobHandelers.Implementations.RobotControlCenterService import RobotControlCenterService
 from WebApplication import app
 
 if __name__ == '__main__':

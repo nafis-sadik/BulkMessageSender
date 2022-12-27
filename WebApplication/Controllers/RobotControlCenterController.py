@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from Services.Abstractions.IRobotControlCenterService import IRobotControlCenterService
-from Services.Implementations.RobotControlCenterService import RobotControlCenterService
+from JobHandelers.Abstractions.IRobotControlCenterService import IRobotControlCenterService
+from JobHandelers.Implementations.RobotControlCenterService import RobotControlCenterService
 
 robot_control_center_module = APIRouter(
     prefix='/controls',

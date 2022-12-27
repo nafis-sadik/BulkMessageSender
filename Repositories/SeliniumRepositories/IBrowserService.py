@@ -13,6 +13,9 @@ class IBrowserService:
     def get_new_window(self, url: string, user_name: string, use_incognito: bool, use_headless: bool):
         raise NotImplementedError
 
+    def open_url_in_browser(self, url: str, browser_instance: webdriver):
+        raise NotImplementedError
+
     def switch_to_tab(self, browser_instance: webdriver, tab_index: int):
         raise NotImplementedError
 

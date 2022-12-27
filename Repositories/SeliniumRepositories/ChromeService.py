@@ -68,6 +68,9 @@ class ChromeService(IBrowserService, ABC):
         print(self.pid)
         return browser_instance
 
+    def open_url_in_browser(self, url: str, browser_instance: webdriver):
+        browser_instance.get(url)
+
     def click_by(self, browser_instance: webdriver, element_type: str, element_id: str):
         browser_instance.implicitly_wait(200)
         element = self.get_elements(browser_instance, element_type, element_id)
