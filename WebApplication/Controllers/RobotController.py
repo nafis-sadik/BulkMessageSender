@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from Models.ViewModels.RobotModel import RobotsModel
+from Models.ViewModels.RobotModelVM import RobotsModelVM
 from Services.Abstractions.IRobotSettingsService import IRobotSettingsService
 from Services.Implementations.RobotSettingsService import RobotSettingsService
 
@@ -8,6 +8,7 @@ robot_module = APIRouter(
     prefix='/robots',
     tags=["Robot Settings"],
     responses={
+        500: {"description": "Internal Error"},
         404: {"description": "Not found"},
         200: {"description": "OK"}
     }
@@ -15,13 +16,13 @@ robot_module = APIRouter(
 
 
 @robot_module.post('')
-async def add_robot(robot_model: RobotsModel):
+async def add_robot(robot_model: RobotsModelVM):
     robot_service: IRobotSettingsService = RobotSettingsService()
     return await robot_service.add_async(robot_model)
 
 
 @robot_module.put('')
-async def update_robot(robot_model: RobotsModel):
+async def update_robot(robot_model: RobotsModelVM):
     robot_service: IRobotSettingsService = RobotSettingsService()
     return await robot_service.update_async(robot_model)
 

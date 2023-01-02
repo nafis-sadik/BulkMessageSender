@@ -3,7 +3,7 @@ from abc import ABC
 from typing import Optional
 
 from Models.LookupValues.LookupValues import Platforms, Browsers
-from Models.ViewModels.RobotModel import RobotsModel
+from Models.ViewModels.RobotModelVM import RobotsModelVM
 from Repositories.SeliniumRepositories.ChromeService import ChromeService
 from Repositories.SeliniumRepositories.IBrowserService import IBrowserService
 from JobHandelers.Abstractions.IRobotControlCenterService import IRobotControlCenterService
@@ -32,7 +32,7 @@ class RobotControlCenterService(IRobotControlCenterService, ABC):
 
     async def initialize_robot(self, robot_id: int) -> None:
         bot_settings_service: IRobotSettingsService = RobotSettingsService()
-        robot_model: RobotsModel = await bot_settings_service.get_robot_async(robot_id)
+        robot_model: RobotsModelVM = await bot_settings_service.get_robot_async(robot_id)
 
         if robot_model.is_deleted:
             raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
@@ -57,7 +57,7 @@ class RobotControlCenterService(IRobotControlCenterService, ABC):
 
     async def start_robot(self, robot_id: int) -> None:
         bot_settings_service: IRobotSettingsService = RobotSettingsService()
-        robot_model: RobotsModel = await bot_settings_service.get_robot_async(robot_id)
+        robot_model: RobotsModelVM = await bot_settings_service.get_robot_async(robot_id)
 
         if robot_model.is_deleted:
             raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
@@ -72,7 +72,7 @@ class RobotControlCenterService(IRobotControlCenterService, ABC):
 
     async def stop_robot(self, robot_id: int) -> None:
         bot_settings_service: IRobotSettingsService = RobotSettingsService()
-        robot_model: RobotsModel = await bot_settings_service.get_robot_async(robot_id)
+        robot_model: RobotsModelVM = await bot_settings_service.get_robot_async(robot_id)
 
         if robot_model.is_deleted:
             raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
@@ -86,7 +86,7 @@ class RobotControlCenterService(IRobotControlCenterService, ABC):
 
     async def terminate_robot(self, robot_id: int) -> None:
         bot_settings_service: IRobotSettingsService = RobotSettingsService()
-        robot_model: RobotsModel = await bot_settings_service.get_robot_async(robot_id)
+        robot_model: RobotsModelVM = await bot_settings_service.get_robot_async(robot_id)
 
         if robot_model.is_deleted:
             raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
@@ -104,7 +104,7 @@ class RobotControlCenterService(IRobotControlCenterService, ABC):
 
     async def get_robot(self, robot_id: int) -> Optional[IRobotOperationsService]:
         bot_settings_service: IRobotSettingsService = RobotSettingsService()
-        robot_model: RobotsModel = await bot_settings_service.get_robot_async(robot_id)
+        robot_model: RobotsModelVM = await bot_settings_service.get_robot_async(robot_id)
 
         if robot_model.is_deleted:
             raise Exception(f'Robot name {robot_model.robot_name} is unavailable')

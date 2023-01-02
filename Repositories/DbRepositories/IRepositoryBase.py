@@ -1,3 +1,6 @@
+from Models.ViewModels.PaginationModel import PaginationModel
+
+
 class IRepositoryBase:
     async def get_version(self):
         raise NotImplementedError
@@ -21,6 +24,9 @@ class IRepositoryBase:
         raise NotImplementedError
 
     async def get_count(self) -> int:
+        raise NotImplementedError
+
+    async def get_paged_list(self, paging_data: PaginationModel) -> PaginationModel:
         raise NotImplementedError
 
     async def max(self, col_map):

@@ -6,7 +6,7 @@ from typing import Optional
 from automapper import mapper
 
 from Models.Entities.Entity import Robots
-from Models.ViewModels.RobotModel import RobotsModel
+from Models.ViewModels.RobotModelVM import RobotsModelVM
 from Repositories.DbRepositories.IRepositoryBase import IRepositoryBase
 from Repositories.DbRepositories.RepositoryBase import RepositoryBase
 from Services.Abstractions.IRobotSettingsService import IRobotSettingsService
@@ -17,10 +17,10 @@ class RobotSettingsService(IRobotSettingsService, ABC):
         self.robot_repo: IRepositoryBase = RepositoryBase(Robots)
         self.logger = logging.getLogger('ServerLog')
 
-    async def add_async(self, robot_model: RobotsModel) -> Optional[RobotsModel]:
+    async def add_async(self, robot_model: RobotsModelVM) -> Optional[RobotsModelVM]:
         try:
             if await self.robot_repo.get(Robots.id != robot_model.id, Robots.robot_name == robot_model.robot_name):
-                raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
+                raise Exception(f'Robot name {robot_model.robot_name} is already added')
             robot_entity = mapper.to(Robots).map(robot_model)
             robot_entity.id = None
             robot_entity.is_deleted = False
@@ -33,7 +33,7 @@ class RobotSettingsService(IRobotSettingsService, ABC):
             await self.robot_repo.rollback()
             return None
 
-    async def update_async(self, robot_model: RobotsModel) -> Optional[RobotsModel]:
+    async def update_async(self, robot_model: RobotsModelVM) -> Optional[RobotsModelVM]:
         try:
             if await self.robot_repo.get(Robots.id != robot_model.id, Robots.robot_name == robot_model.robot_name):
                 raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
@@ -47,7 +47,7 @@ class RobotSettingsService(IRobotSettingsService, ABC):
             entity.is_headless = robot_model.is_headless
             entity.is_deleted = False
             await self.robot_repo.commit()
-            return mapper.to(RobotsModel).map(entity)
+            return mapper.to(RobotsModelVM).map(entity)
         except Exception as ex:
             details = {'platform': platform.node(), 'target': 'update_async'}
             self.logger.error('Robot Settings Service: %s', str(ex), extra=details)
@@ -64,10 +64,10 @@ class RobotSettingsService(IRobotSettingsService, ABC):
             self.logger.error('Robot Settings Service: %s', str(ex), extra=details)
             return None
 
-    async def get_robot_async(self, robot_id: int) -> Optional[RobotsModel]:
+    async def get_robot_async(self, robot_id: int) -> Optional[RobotsModelVM]:
         try:
             entity: Robots = await self.robot_repo.get(Robots.id == robot_id)
-            return mapper.to(RobotsModel).map(entity)
+            return mapper.to(RobotsModelVM).map(entity)
         except Exception as ex:
             details = {'platform': platform.node(), 'target': 'get_robot_async'}
             self.logger.error('Robot Settings Service: %s', str(ex), extra=details)
@@ -78,7 +78,7 @@ class RobotSettingsService(IRobotSettingsService, ABC):
             entities: list = await self.robot_repo.get_list(Robots.is_deleted == False)
             models = list()
             for robo in entities:
-                models.append(mapper.to(RobotsModel).map(robo))
+                models.append(mapper.to(RobotsModelVM).map(robo))
             return models
         except Exception as ex:
             details = {'platform': platform.node(), 'target': 'get_all_robots_async'}

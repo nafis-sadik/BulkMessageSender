@@ -2,7 +2,7 @@ from pydantic.fields import Field
 from pydantic.main import BaseModel
 
 
-class RobotsModel(BaseModel):
+class RobotsModelVM(BaseModel):
     id: int = Field(None, title='Robot Id')
     robot_name: str = Field(None, title='Robot Name', max_length=100)
     platform_selection: str = Field(None, title='Select Messaging Service', max_length=100)

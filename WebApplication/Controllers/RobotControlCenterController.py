@@ -44,6 +44,6 @@ async def get_robots(robot_id: int):
 
 
 @robot_control_center_module.get('/GetAllAsync/')
-async def get_robots():
+async def get_robots_online():
     robot_control_service: IRobotControlCenterService = RobotControlCenterService.initialize()
     return robot_control_service.get_all_alive_robots()
