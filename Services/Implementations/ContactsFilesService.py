@@ -33,10 +33,10 @@ class ContactsFilesService(IContactsFilesService, ABC):
         try:
             file_entity: ContactsFiles = await self.contact_files_repo.get(ContactsFiles.file_id == view_model.file_id)
 
-            view_model.file_name = file_entity.file_name
-            view_model.file_path = file_entity.file_path
-            view_model.file_sync_status = file_entity.file_sync_status
-            view_model.original_file_name = file_entity.original_file_name
+            file_entity.file_name = view_model.file_name
+            file_entity.file_path = view_model.file_path
+            file_entity.file_sync_status = view_model.file_sync_status
+            file_entity.original_file_name = view_model.original_file_name
 
             await self.contact_files_repo.commit()
             return True

@@ -1,6 +1,6 @@
 import os
 from abc import ABC
-
+import sqlalchemy.dialects.sqlite
 import sqlalchemy
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -14,10 +14,10 @@ from Repositories.DbRepositories.IRepositoryBase import IRepositoryBase
 class RepositoryBase(IRepositoryBase, ABC):
     def __init__(self, entity: type):
         self.entity_type = entity
+        conn_str: str = os.getenv('CONNECTION_SQLITE_ASYNC')
+        self.async_engine = create_async_engine(conn_str, echo=False)
 
-        self.async_engine = create_async_engine(os.getenv('CONNECTION_SQLITE_ASYNC'), echo=False)
-
-        if database_exists(os.getenv('CONNECTION_SQLITE_ASYNC')) is not True:
+        if database_exists(conn_str) is not True:
             raise Exception('Migration required')
 
         session_maker: sessionmaker = sessionmaker(self.async_engine, expire_on_commit=False, class_=AsyncSession)
