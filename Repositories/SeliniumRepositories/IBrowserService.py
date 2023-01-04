@@ -1,5 +1,3 @@
-import string
-
 from selenium import webdriver
 
 
@@ -7,10 +5,10 @@ class IBrowserService:
     def __init__(self):
         pass
 
-    def get_elements(self, browser_instance: webdriver, element_type: string, element_id: string):
+    def get_elements(self, browser_instance: webdriver, element_type: str, element_id: str):
         raise NotImplementedError
 
-    def get_new_window(self, url: string, user_name: string, use_incognito: bool, use_headless: bool):
+    def get_new_window(self, url: str, user_name: str, use_incognito: bool, use_headless: bool):
         raise NotImplementedError
 
     def open_url_in_browser(self, url: str, browser_instance: webdriver):
@@ -19,25 +17,25 @@ class IBrowserService:
     def switch_to_tab(self, browser_instance: webdriver, tab_index: int):
         raise NotImplementedError
 
-    def set_input_value(self, browser_instance: webdriver, element_type: string, element_id: string, element_value: string) -> [None]:
+    def set_input_value(self, browser_instance: webdriver, element_type: str, element_id: str, element_value: str) -> [None]:
         raise NotImplementedError
 
-    def click_date_on_date_picker(self, browser_instance: webdriver, xpath: string, date: int, element_type: string):
+    def click_date_on_date_picker(self, browser_instance: webdriver, xpath: str, date: int, element_type: str):
         raise NotImplementedError
 
-    def click_by(self, browser_instance: webdriver, element_type: string, element_id: string) -> [None]:
+    def click_by(self, browser_instance: webdriver, element_type: str, element_id: str) -> [None]:
         raise NotImplementedError
 
-    def get_screenshot_by_element(self, browser_instance: webdriver, file_path: string, element_type: string, element_id: string, crop_x: int, crop_y: int):
+    def get_screenshot_by_element(self, browser_instance: webdriver, file_path: str, element_type: str, element_id: str, crop_x: int, crop_y: int):
         raise NotImplementedError
 
-    def set_select_value(self, browser_instance: webdriver, element_type: string, element_id: string, visible_text: string) -> [None]:
+    def set_select_value(self, browser_instance: webdriver, element_type: str, element_id: str, visible_text: str) -> [None]:
         raise NotImplementedError
 
-    def hover_by(self, browser_instance: webdriver, element_type: string, element_id: string) -> [None]:
+    def hover_by(self, browser_instance: webdriver, element_type: str, element_id: str) -> [None]:
         raise NotImplementedError
 
-    def scroll_horizontal(self, browser_instance: webdriver, element_type: string, element_id: string, pixels: int):
+    def scroll_horizontal(self, browser_instance: webdriver, element_type: str, element_id: str, pixels: int):
         raise NotImplementedError
 
     def scroll_vertical(self, browser_instance: webdriver, y_cord: int):
@@ -46,14 +44,14 @@ class IBrowserService:
     def refresh_page(self, browser_instance: webdriver):
         raise NotImplementedError
 
-    def get_screenshot(self, browser_instance: webdriver, file_path: string):
+    def get_screenshot(self, browser_instance: webdriver, file_path: str):
         raise NotImplementedError
 
-    def crop_image_by_cords(self, file_path: string, crop_x: int, crop_y: int, origin_x: int, origin_y: int):
+    def crop_image_by_cords(self, file_path: str, crop_x: int, crop_y: int, origin_x: int, origin_y: int):
         raise NotImplementedError
 
-    def crop_image_by_element(self, browser_instance: webdriver, file_path: string, element_type: string,
-                              element_id: string, crop_x: int, crop_y: int):
+    def crop_image_by_element(self, browser_instance: webdriver, file_path: str, element_type: str,
+                              element_id: str, crop_x: int, crop_y: int):
         raise NotImplementedError
 
     def close_window(self, browser_instance: webdriver):

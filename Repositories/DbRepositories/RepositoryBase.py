@@ -5,7 +5,6 @@ import sqlalchemy
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils.functions import database_exists
 
 from Models.ViewModels.PaginationModel import PaginationModel
 from Repositories.DbRepositories.IRepositoryBase import IRepositoryBase
@@ -17,12 +16,7 @@ class RepositoryBase(IRepositoryBase, ABC):
         conn_str: str = os.getenv('CONNECTION_SQLITE_ASYNC')
         self.async_engine = create_async_engine(conn_str, echo=False)
 
-        if database_exists(conn_str) is not True:
-            raise Exception('Migration required')
-
         session_maker: sessionmaker = sessionmaker(self.async_engine, expire_on_commit=False, class_=AsyncSession)
-        # with session_maker() as session:
-        #     self.session: AsyncSession = session
         self.session: AsyncSession = session_maker()
 
     async def get_version(self):
@@ -48,8 +42,8 @@ class RepositoryBase(IRepositoryBase, ABC):
 
     async def get_paged_list(self, paging_data: PaginationModel) -> PaginationModel:
         result = await self.session \
-            .execute(select(self.entity_type) \
-                     .offset(paging_data.page_length * (paging_data.page_number - 1)) \
+            .execute(select(self.entity_type)
+                     .offset(paging_data.page_length * (paging_data.page_number - 1))
                      .limit(paging_data.page_length))
         paging_data.data_collection = result.scalars().all()
         return paging_data
