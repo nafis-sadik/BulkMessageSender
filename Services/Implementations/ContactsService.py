@@ -20,11 +20,12 @@ class ContactsService(IContactsService, ABC):
     async def save_contacts(self, contacts: list):
         try:
             for contact in contacts:
-                if await self.contacts_repo.get(contact.contact_number == Contacts.contact_number):
-                    raise Exception(f'{contact.contact_number} is already saved')
+                if await self.contacts_repo.get(contact == Contacts.contact_number):
+                    raise Exception(f'{contact} is already saved')
 
-                contact_entity = mapper.to(Contacts).map(contact)
-                self.contacts_repo.add(contact_entity)
+                self.contacts_repo.add(Contacts(
+                    contact_number = contact
+                ))
             await self.contacts_repo.commit()
         except Exception as ex:
             await self.contacts_repo.rollback()

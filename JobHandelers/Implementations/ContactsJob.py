@@ -1,4 +1,5 @@
 import csv
+import asyncio
 from abc import ABC
 
 from JobHandelers.Abstractions.IContactsJob import IContactsJob
@@ -11,18 +12,18 @@ from Services.Implementations.ContactsService import ContactsService
 
 class ContactsJob(IContactsJob, ABC):
 
-    async def sync_contacts(self, file_id: int) -> None:
+    def sync_contacts(self, file_id: int) -> None:
         contacts_file_service: IContactsFilesService = ContactsFilesService()
-        file_details: ContactsFileVM = await contacts_file_service.get_file(file_id)
+        file_details: ContactsFileVM = asyncio.run(contacts_file_service.get_file(file_id))
         file_details.file_sync_status = 2
-        await contacts_file_service.update_file_info(file_details)
+        asyncio.run(contacts_file_service.update_file_info(file_details))
 
         contact_list: list = ContactsJob.read_csv(file_details.file_path)
         contacts_service: IContactsService = ContactsService()
-        contacts_service.save_contacts(contact_list)
+        asyncio.run(contacts_service.save_contacts(contact_list))
 
         file_details.file_sync_status = 3
-        await contacts_file_service.update_file_info(file_details)
+        asyncio.run(contacts_file_service.update_file_info(file_details))
 
     @classmethod
     def read_csv(cls, file_path):

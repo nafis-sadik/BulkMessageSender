@@ -67,7 +67,6 @@ async def upload_file(file: UploadFile = File(description=".csv file of contact 
 @csv_module.get('/sync/{file_id}')
 async def sync_file(file_id: int):
     contact_file_job: ContactsJob = ContactsJob()
-    robot_thread = threading.Thread(target=contact_file_job.sync_contacts, args=file_id)
+    robot_thread = threading.Thread(target=contact_file_job.sync_contacts, args=(file_id,))
     robot_thread.start()
-    # await contact_file_job.sync_contacts(file_id)
     return {'Result': 'Successful'}

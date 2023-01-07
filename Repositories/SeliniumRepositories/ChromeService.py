@@ -46,17 +46,17 @@ class ChromeService(IBrowserService, ABC):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
+        dir_path = os.path.dirname(os.path.join(__file__))
+        print(dir_path)
         # Windows driver path
         if system_platform == 'Windows':
-            dir_path = os.path.dirname(os.path.join(__file__))
             # Path to your chrome profile
             options.add_argument(
                 'user-data-dir=C:\\Users\\' + pc_user_name + '\\AppData\\Local\\Google\\Chrome\\User'
             )
             driver_path = dir_path + '/chromedriver.exe'
         elif system_platform == 'Linux':
-            options.add_argument(
-                '--user-data-dir=/home/' + pc_user_name + '/.config/google-chrome/' + user_name)
+            options.add_argument('--user-data-dir=/home/' + pc_user_name + '/.config/google-chrome/' + user_name)
             driver_path = 'chromedriver'  # linux driver path
         else:
             raise PermissionError
