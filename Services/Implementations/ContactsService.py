@@ -21,10 +21,12 @@ class ContactsService(IContactsService, ABC):
         try:
             for contact in contacts:
                 if await self.contacts_repo.get(contact == Contacts.contact_number):
-                    raise Exception(f'{contact} is already saved')
+                    print(f'{contact} is already saved')
+                    continue
 
                 self.contacts_repo.add(Contacts(
-                    contact_number = contact
+                    contact_number=contact,
+                    booking_status=False
                 ))
             await self.contacts_repo.commit()
         except Exception as ex:
@@ -38,6 +40,7 @@ class ContactsService(IContactsService, ABC):
                 raise Exception(f'{contact.contact_number} is already saved')
 
             contact_entity = mapper.to(Contacts).map(contact)
+            contact_entity.booking_status = False
             self.contacts_repo.add(contact_entity)
             await self.contacts_repo.commit()
         except Exception as ex:

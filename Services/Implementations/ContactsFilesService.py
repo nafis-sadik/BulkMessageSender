@@ -2,6 +2,8 @@ import logging
 import platform
 from abc import ABC
 
+from automapper import mapper
+
 from Models.Entities.Entity import ContactsFiles
 from Models.ViewModels.ContactsFileVM import ContactsFileVM
 from Models.ViewModels.PaginationModel import PaginationModel
@@ -36,7 +38,6 @@ class ContactsFilesService(IContactsFilesService, ABC):
             file_entity.file_name = view_model.file_name
             file_entity.file_path = view_model.file_path
             file_entity.file_sync_status = view_model.file_sync_status
-            file_entity.original_file_name = view_model.original_file_name
 
             await self.contact_files_repo.commit()
             return True
@@ -61,13 +62,7 @@ class ContactsFilesService(IContactsFilesService, ABC):
             file_list_model = list()
 
             for file_model in contacts_files.data_collection:
-                # view_model = mapper.to(ContactsFileVM).map(file_model).spec()
-                view_model = ContactsFileVM()
-                view_model.file_id = file_model.file_id
-                view_model.file_name = file_model.file_name
-                view_model.file_path = file_model.file_path
-                view_model.original_file_name = file_model.original_file_name
-                view_model.file_sync_status = file_model.file_sync_status
+                view_model = mapper.to(ContactsFileVM).map(file_model)
                 file_list_model.append(view_model)
 
             contacts_files.data_collection = file_list_model
@@ -79,12 +74,7 @@ class ContactsFilesService(IContactsFilesService, ABC):
     async def get_file(self, file_id: int) -> ContactsFileVM:
         try:
             file_entity: ContactsFiles = await self.contact_files_repo.get(ContactsFiles.file_id == file_id)
-            view_model = ContactsFileVM()
-            view_model.file_id = file_entity.file_id
-            view_model.file_name = file_entity.file_name
-            view_model.file_path = file_entity.file_path
-            view_model.file_sync_status = file_entity.file_sync_status
-            view_model.original_file_name = file_entity.original_file_name
+            view_model = mapper.to(ContactsFileVM).map(file_entity)
             return view_model
         except Exception as ex:
             details = {'platform': platform.node(), 'target': 'get_file'}

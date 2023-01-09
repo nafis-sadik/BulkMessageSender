@@ -1,3 +1,4 @@
+# import asyncio
 import os
 from abc import ABC
 import sqlalchemy.dialects.sqlite
@@ -28,15 +29,6 @@ class RepositoryBase(IRepositoryBase, ABC):
     def delete(self, data):
         self.session.delete(data)
 
-    async def rollback(self) -> None:
-        await self.session.rollback()
-
-    async def commit(self):
-        await self.session.commit()
-        await self.session.flush()
-        await self.session.close()
-        await self.async_engine.dispose()
-
     async def get_count(self) -> int:
         return await self.session.execute(select(self.entity_type).count())
 
@@ -57,8 +49,29 @@ class RepositoryBase(IRepositoryBase, ABC):
         return result.scalars().all()
 
     async def max(self, col_map):
-        return await self.session.execute(select(self.entity_type).where(func.max(col_map)))
+        result = await self.session.execute(select(self.entity_type).where(func.max(col_map)))
+        return result
 
+    async def rollback(self) -> None:
+        await self.session.rollback()
+
+    async def commit(self):
+        await self.session.commit()
+
+    async def close(self):
+        await self.session.flush()
+        await self.session.close()
+        await self.async_engine.dispose()
+
+    # async def __aenter__(self):
+    #     raise NotImplementedError
+    #
+    # async def __aexit__(self):
+    #     await self.session.flush()
+    #     await self.session.close()
+    #     await self.async_engine.dispose()
+    #
     # def __del__(self):
-    #     self.session.close()
-    #     self.engine.dispose()
+    #     asyncio.run(self.session.flush())
+    #     asyncio.run(self.session.close())
+    #     asyncio.run(self.async_engine.dispose())

@@ -21,12 +21,35 @@ class ChromeService(IBrowserService, ABC):
         self.__time_wait_limit: int = 10
         self.pid: int = 0
 
+    def get_element(self, browser_instance: webdriver, element_type: str, element_id: str):
+        try:
+            browser_instance.implicitly_wait(200)
+
+            resource = browser_instance.find_element(element_type, element_id)
+            # resource = WebDriverWait(
+            #     driver=browser_instance,
+            #     timeout=self.__time_wait_limit,
+            #     poll_frequency=1) \
+            #     .until(ec.visibility_of_element_located((element_type, element_id)))
+
+            return resource
+        except Exception as e:
+            print(str(e))
+            return None
+
     def get_elements(self, browser_instance: webdriver, element_type: str, element_id: str):
-        return WebDriverWait(
-            driver=browser_instance,
-            timeout=self.__time_wait_limit,
-            poll_frequency=1) \
-            .until(ec.presence_of_all_elements_located((element_type, element_id)))
+        try:
+            resource = WebDriverWait(
+                driver=browser_instance,
+                timeout=self.__time_wait_limit,
+                poll_frequency=1) \
+                .until(ec.visibility_of_all_elements_located((element_type, element_id)))
+
+            return resource
+        except Exception as e:
+            print(str(e))
+            return None
+        # .until(ec.presence_of_all_elements_located((element_type, element_id)))
 
     def get_new_window(self, url: str, user_name: str, use_incognito: bool, use_headless: bool):
         # Resolve platform dependency
@@ -73,14 +96,20 @@ class ChromeService(IBrowserService, ABC):
 
     def click_by(self, browser_instance: webdriver, element_type: str, element_id: str):
         browser_instance.implicitly_wait(200)
-        element = self.get_elements(browser_instance, element_type, element_id)
-        if element is not None and len(element) > 0:
-            element[0].click()
+        element = self.get_element(browser_instance, element_type, element_id)
+        if element is not None:
+            element.click()
+
+    def upload_file(self, browser_instance: webdriver, element_type: str, element_id: str, file_path: str) -> [None]:
+        browser_instance.implicitly_wait(200)
+        element = self.get_element(browser_instance, element_type, element_id)
+        if element is not None:
+            element.send_keys(file_path)
 
     def hover_by(self, browser_instance: webdriver, element_type: str, element_id: str):
         browser_instance.implicitly_wait(200)
-        element = self.get_elements(browser_instance, element_type, element_id)
-        if element is not None and len(element) > 0:
+        element = self.get_element(browser_instance, element_type, element_id)
+        if element is not None:
             ActionChains(browser_instance).move_to_element(element).perform()
         else:
             print('Chrome Service :: hover_by :: Element not found')
@@ -88,8 +117,8 @@ class ChromeService(IBrowserService, ABC):
 
     def set_input_value(self, browser_instance: webdriver, element_type: str, element_id: str, input_value: str):
         browser_instance.implicitly_wait(200)
-        element = self.get_elements(browser_instance, element_type, element_id)
-        if element is not None and len(element) > 0:
+        element = self.get_element(browser_instance, element_type, element_id)
+        if element is not None:
             element.clear()
             element.send_keys(input_value)
         else:
@@ -98,8 +127,8 @@ class ChromeService(IBrowserService, ABC):
 
     def set_select_value(self, browser_instance: webdriver, element_type: str, element_id: str, visible_text: str):
         browser_instance.implicitly_wait(200)
-        element = self.get_elements(browser_instance, element_type, element_id)
-        if element is not None and len(element) > 0:
+        element = self.get_element(browser_instance, element_type, element_id)
+        if element is not None:
             select = Select(element)
             select.select_by_visible_text(visible_text)
         else:
@@ -109,8 +138,11 @@ class ChromeService(IBrowserService, ABC):
     def click_date_on_date_picker(self, browser_instance: webdriver, element_id: str, date: int,
                                   element_type: str = By.XPATH):
         try:
-            calender = self.get_elements(browser_instance=browser_instance, element_type=element_type,
-                                         element_id=element_id)
+            calender = self.get_elements(
+                browser_instance=browser_instance,
+                element_type=element_type,
+                element_id=element_id
+            )
             calender[date - 1].click()
             return browser_instance
         except Exception as e:
@@ -166,8 +198,8 @@ class ChromeService(IBrowserService, ABC):
                                   ):
         try:
             time.sleep(2)
-            element = self.get_elements(browser_instance, element_type, element_id)
-            if element is not None and len(element) > 0:
+            element = self.get_element(browser_instance, element_type, element_id)
+            if element is not None:
                 element.screenshot(file_path)
             else:
                 print('Chrome Service :: set_select_value :: Element not found')
@@ -183,13 +215,11 @@ class ChromeService(IBrowserService, ABC):
                               crop_x: int, crop_y: int
                               ):
         try:
-            elements = self.get_elements(browser_instance, element_type, element_id)
-            element = None
-            if elements is not None and len(elements) > 0:
-                element = elements[0]
-            else:
+            element = self.get_element(browser_instance, element_type, element_id)
+            if element is None:
                 print('Chrome Service :: set_select_value :: Element not found')
                 print(element_type, element_id, file_path)
+                raise Exception(f'element {element_id} of type {element_type} was not found')
             location = element.location
             image = Image.open(file_path)
             location_x, location_y = location['x'], location['y']
@@ -210,6 +240,12 @@ class ChromeService(IBrowserService, ABC):
             return file_path
         except Exception as e:
             print(e)
+
+    def alert_response(self, browser_instance: webdriver, response: bool):
+        if response is True:
+            browser_instance.switch_to.alert.accept()
+        else:
+            browser_instance.switch_to.alert.dismiss()
 
     def close_window(self, browser_instance: webdriver):
         try:

@@ -5,6 +5,9 @@ class IBrowserService:
     def __init__(self):
         pass
 
+    def get_element(self, browser_instance: webdriver, element_type: str, element_id: str):
+        raise NotImplementedError
+
     def get_elements(self, browser_instance: webdriver, element_type: str, element_id: str):
         raise NotImplementedError
 
@@ -24,6 +27,9 @@ class IBrowserService:
         raise NotImplementedError
 
     def click_by(self, browser_instance: webdriver, element_type: str, element_id: str) -> [None]:
+        raise NotImplementedError
+
+    def upload_file(self, browser_instance: webdriver, element_type: str, element_id: str, file_path: str) -> [None]:
         raise NotImplementedError
 
     def get_screenshot_by_element(self, browser_instance: webdriver, file_path: str, element_type: str, element_id: str, crop_x: int, crop_y: int):
@@ -52,6 +58,9 @@ class IBrowserService:
 
     def crop_image_by_element(self, browser_instance: webdriver, file_path: str, element_type: str,
                               element_id: str, crop_x: int, crop_y: int):
+        raise NotImplementedError
+
+    def alert_response(self, browser_instance: webdriver, response: bool):
         raise NotImplementedError
 
     def close_window(self, browser_instance: webdriver):

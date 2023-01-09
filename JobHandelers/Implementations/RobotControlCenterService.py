@@ -1,4 +1,5 @@
-import threading
+import asyncio
+# import threading
 from abc import ABC
 from typing import Optional
 
@@ -55,20 +56,18 @@ class RobotControlCenterService(IRobotControlCenterService, ABC):
         # uniquely be identified to control
         self.robot_pool[robot_model.robot_name] = robot
 
-    async def start_robot(self, robot_id: int) -> None:
-        bot_settings_service: IRobotSettingsService = RobotSettingsService()
-        robot_model: RobotsModelVM = await bot_settings_service.get_robot_async(robot_id)
-
-        if robot_model.is_deleted:
-            raise Exception(f'Robot name {robot_model.robot_name} is unavailable')
-
+    def start_robot(self, robot_name: str) -> None:
         # Get the robot from the pool
-        if robot_model.robot_name in self.robot_pool.keys():
-            robot: IRobotOperationsService = self.robot_pool[robot_model.robot_name]
-            new_robot_thread = threading.Thread(target=robot.start)
-            new_robot_thread.start()
+        if robot_name in self.robot_pool.keys():
+            robot: IRobotOperationsService = self.robot_pool[robot_name]
+
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+            loop.run_until_complete(robot.start())
+            loop.close()
         else:
-            raise Exception(f'Robot {robot_model.robot_name} is not initialized')
+            raise Exception(f'Robot {robot_name} is not initialized')
 
     async def stop_robot(self, robot_id: int) -> None:
         bot_settings_service: IRobotSettingsService = RobotSettingsService()

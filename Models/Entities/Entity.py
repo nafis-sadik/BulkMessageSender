@@ -44,6 +44,7 @@ class Contacts(Base):
     contact_id = Column(Integer, primary_key=True, autoincrement=True)
     contact_number = Column(Integer, nullable=False)
     location_id = Column(Integer, ForeignKey('Locations.location_id'))
+    booking_status = Column(Boolean, nullable=False)
     locations_relation = relationship(
         "Locations",
         primaryjoin="(Contacts.location_id==Locations.location_id)",

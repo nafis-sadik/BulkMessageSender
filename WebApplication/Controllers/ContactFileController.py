@@ -1,3 +1,4 @@
+import os
 import threading
 from datetime import datetime
 
@@ -20,6 +21,11 @@ csv_module = APIRouter(
         500: {"description": "Internal Error"}
     }
 )
+
+
+@csv_module.get('/storage/')
+async def get_files():
+    return os.listdir('./contacts_files/')
 
 
 @csv_module.post('/pagination/')

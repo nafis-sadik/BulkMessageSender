@@ -11,12 +11,6 @@ class IRepositoryBase:
     def delete(self, data: any) -> None:
         raise NotImplementedError
 
-    async def rollback(self) -> None:
-        raise NotImplementedError
-
-    async def commit(self) -> None:
-        raise NotImplementedError
-
     async def get_list(self, *args) -> list:
         raise NotImplementedError
 
@@ -30,4 +24,13 @@ class IRepositoryBase:
         raise NotImplementedError
 
     async def max(self, col_map):
+        raise NotImplementedError
+
+    async def rollback(self) -> None:
+        raise NotImplementedError
+
+    async def commit(self) -> None:
+        raise NotImplementedError
+
+    async def close(self):
         raise NotImplementedError

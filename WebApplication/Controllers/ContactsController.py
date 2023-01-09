@@ -15,11 +15,6 @@ contacts_module = APIRouter(
 )
 
 
-@contacts_module.get('files')
-async def get_files():
-    return os.listdir('./contacts_files/')
-
-
 @contacts_module.delete('files/{file_id}')
 async def delete_file(file_id: int):
     return {"Result": file_id}

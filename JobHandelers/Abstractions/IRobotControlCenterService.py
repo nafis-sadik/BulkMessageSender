@@ -10,7 +10,7 @@ class IRobotControlCenterService:
     async def initialize_robot(self, robot_id: int) -> None:
         raise NotImplementedError
 
-    async def start_robot(self, robot_id: int) -> None:
+    def start_robot(self, robot_id: int) -> None:
         raise NotImplementedError
 
     async def stop_robot(self, robot_id: int) -> None:
